@@ -4,10 +4,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 const ProductCard = ({ product }) => {
   return (
     <View style={styles.card}>
-      <Image
-        source={{ uri: require("../images/test.jpeg") }}
-        style={styles.image}
-      />
+      <Image source={require("../images/test.jpeg")} style={styles.image} />
       <Text style={styles.title}>Le frog</Text>
       <Text style={styles.description}>A frog</Text>
     </View>
