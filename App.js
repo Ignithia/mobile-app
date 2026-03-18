@@ -1,42 +1,22 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import ProductCard from "./components/ProductCard";
+import {} from "react-native";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import HomeScreen from "./screens/HomeScreen.js";
+import ProductDetail from "./screens/ProductDetail.js";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Our offer</Text>
-      <ScrollView style={styles.container} contentContainerStyle={styles.list}>
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-      </ScrollView>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={ProductDetail} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
-  heading: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "700",
-    textAlign: "center",
-    marginTop: 64,
-    marginBottom: 12,
-  },
-  list: {
-    paddingHorizontal: 12,
-    paddingBottom: 24,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-});

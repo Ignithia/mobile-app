@@ -4,38 +4,25 @@ import {
   Text,
   Image,
   StyleSheet,
-  Pressable,
   Button,
-  Switch,
-  TextInput,
+  TouchableOpacity,
 } from "react-native";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ image, name, description, price, onPress }) => {
   return (
     <View style={styles.card}>
-      <Image source={require("../images/imdages.jpeg")} style={styles.image} />
-      <Text style={styles.title}>Batman Skateboard</Text>
-      <Text style={styles.description}>Skateboard met batman logo</Text>
-      <Text style={styles.price}>$29.99</Text>
+      <Image source={image} style={styles.image} />
+      <Text style={styles.title}>{name}</Text>
+      <Text style={styles.description}>{description}</Text>
+      <Text style={styles.price}>${price.toFixed(2)}</Text>
       <Button
         style={styles.button}
-        OnPress={() => alert("You bought a skateboard")}
+        OnPress={() => alert("Bought")}
         title="Buy Now"
       ></Button>
-      <Pressable
-        style={styles.button}
-        onPress={() => alert("Viewing details for Batman Skateboard")}
-      >
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>View Details</Text>
-      </Pressable>
-      <Text style={{ color: "#fff" }}>Add to Wishlist</Text>
-      <Switch
-        style={styles.switch}
-        onValueChange={() => alert("Added to wishlist")}
-        value={false}
-        title="Add to Wishlist"
-      ></Switch>
-      <TextInput placeholder="Enter quantity" style={styles.input} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -78,21 +65,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: "center",
   },
-  switch: {
-    backgroundColor: "#04fb08",
-  },
+
   buttonText: {
     color: "#fff",
     fontWeight: "700",
-  },
-  input: {
-    marginTop: 12,
-    backgroundColor: "#333",
-    borderColor: "#555",
-    borderWidth: 1,
-    color: "#fff",
-    paddingVertical: 10,
-    paddingHorizontal: 16,
   },
 });
 
