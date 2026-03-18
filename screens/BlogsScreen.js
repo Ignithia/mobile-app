@@ -8,7 +8,7 @@ import {
   Switch,
   TextInput,
 } from "react-native";
-import Blogcard from "../components/BlogCard";
+import BlogCard from "../components/BlogCard.js";
 
 const BlogsScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -44,7 +44,8 @@ const BlogsScreen = ({ navigation }) => {
             navigation.navigate("Details", {
               image: require("../images/imdages.jpeg"),
               title: "Top 5 Skateboards for Beginners",
-              shortDesc: "A roundup of the best skateboards for those just starting out.",
+              shortDesc:
+                "A roundup of the best skateboards for those just starting out.",
               longDesc:
                 "Choosing your first skateboard can be overwhelming. In this blog, we review the top 5 boards for beginners, covering features, price, and durability. Learn what to look for and how to avoid common mistakes when buying your first skateboard.",
             })
@@ -58,7 +59,8 @@ const BlogsScreen = ({ navigation }) => {
             navigation.navigate("Details", {
               image: require("../images/imdages.jpeg"),
               title: "How to Maintain Your Skateboard",
-              shortDesc: "Tips and tricks for keeping your skateboard in top shape.",
+              shortDesc:
+                "Tips and tricks for keeping your skateboard in top shape.",
               longDesc:
                 "Proper maintenance is key to a smooth ride and long-lasting board. This blog covers cleaning, bearing care, wheel rotation, and deck protection. Discover how regular upkeep can save you money and improve your skating experience.",
             })
@@ -72,7 +74,8 @@ const BlogsScreen = ({ navigation }) => {
             navigation.navigate("Details", {
               image: require("../images/imdages.jpeg"),
               title: "Skateboarding Safety: Essential Gear",
-              shortDesc: "A guide to helmets, pads, and shoes for safe skating.",
+              shortDesc:
+                "A guide to helmets, pads, and shoes for safe skating.",
               longDesc:
                 "Safety should always come first. We break down the must-have gear for skateboarders, including helmet types, knee and elbow pads, and the best shoes for grip and protection. Stay safe and skate smart with these expert recommendations.",
             })
@@ -86,7 +89,8 @@ const BlogsScreen = ({ navigation }) => {
             navigation.navigate("Details", {
               image: require("../images/imdages.jpeg"),
               title: "The History of Skateboarding",
-              shortDesc: "Explore the origins and evolution of skateboarding culture.",
+              shortDesc:
+                "Explore the origins and evolution of skateboarding culture.",
               longDesc:
                 "From its humble beginnings in the 1950s to the global phenomenon it is today, skateboarding has a rich history. This blog traces the sport’s evolution, key figures, and how skateboarding became a cultural icon.",
             })

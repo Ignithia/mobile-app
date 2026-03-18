@@ -11,17 +11,14 @@ import {
 import ProductCard from "../components/ProductCard";
 
 const ProductDetail = ({ route }) => {
-  const { image, title, description, price } = route.params;
+  const { image, title, shortDesc, longDesc } = route.params;
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Details</Text>
       <Image source={image} style={styles.image} />
       <Text style={styles.productTitle}>{title}</Text>
-      <Text style={styles.productDescription}>{description}</Text>
-      <Text style={styles.productPrice}>
-        ${typeof price === "number" ? price.toFixed(2) : price}
-      </Text>
+      <Text style={styles.productDescription}>{longDesc}</Text>
 
       <StatusBar style="auto" />
     </View>
