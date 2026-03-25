@@ -14,7 +14,7 @@ const ProductCard = ({ image, name, description, price, onPress }) => {
       <Image source={image} style={styles.image} />
       <Text style={styles.title}>{name}</Text>
       <Text style={styles.description}>{description}</Text>
-      <Text style={styles.price}>${price.toFixed(2)}</Text>
+      <Text style={styles.price}>${price}</Text>
       <Button
         style={styles.button}
         OnPress={() => alert("Bought")}

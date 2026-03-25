@@ -23,9 +23,11 @@ const categoryNames = {
 
 const BlogsScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [product, setProduct] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("name-asc");
+
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   useFocusEffect(React.useCallback(() => {}, [navigation]));
@@ -41,34 +43,55 @@ const BlogsScreen = ({ navigation }) => {
       },
     )
       .then((res) => res.json())
-      .then((data) =>
-        setProduct(
-          data.items.map((item) => ({
+      .then((data) => {
+        const fetchedBlogs = (data.items || []).map((item) => {
+          const fieldData = item.fieldData || {};
+          const rawImage =
+            fieldData["main-image"] ||
+            fieldData.image ||
+            fieldData.thumbnail ||
+            fieldData.heroImage;
+
+          return {
             id: item.id,
-            title: item.fieldData.name,
-            description: item.fieldData["post-summary"],
+            title: fieldData.name || fieldData.title || "Blog",
+            description:
+              fieldData.summary ||
+              fieldData.description ||
+              fieldData.subtitle ||
+              "",
+            author: fieldData.author || "Unknown author",
+            date: fieldData.date || fieldData["publish-date"] || "",
             body:
-              item.fieldData["post-body"]
-                ?.replace(/<[^>]+>/g, "")
-                .replace(/\u00A0/g, " ") || "",
-            image: { uri: item.fieldData["main-image"]?.url },
-            category:
-              categoryNames[item.fieldData["category"]?.id] ||
-              "Unknown Category",
-          })),
-        ),
-      )
-      .catch((error) => console.error("Error fetching products:", error));
+              fieldData["post-body"]
+                .replace(/<[^>]+>/g, " ")
+                .replace(/\u00A0/g, " ") ||
+              fieldData.content
+                .replace(/<[^>]+>/g, " ")
+                .replace(/\u00A0/g, " ") ||
+              "",
+            image: rawImage?.url ? { uri: rawImage.url } : null,
+            category: categoryNames[fieldData.category] || "Uncategorized",
+          };
+        });
+
+        if (fetchedBlogs.length > 0) {
+          setBlogs(fetchedBlogs);
+        }
+      })
+      .catch((error) => console.error("Error fetching blogs:", error));
   }, []);
 
-  const filteredBlogs = product.filter((blog) => {
-    const matchesCategory = selectedCategory
-      ? blog.category === selectedCategory
-      : true;
-    const matchesSearch = blog.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+  const filteredBlogs = blogs.filter(
+    (b) =>
+      (selectedCategory === "" || b.category === selectedCategory) &&
+      b.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const sortedBlogs = [...filteredBlogs].sort((a, b) => {
+    if (sortOption === "name-asc") return a.title.localeCompare(b.title);
+    if (sortOption === "name-desc") return b.title.localeCompare(a.title);
+    return 0;
   });
 
   return (
@@ -85,11 +108,19 @@ const BlogsScreen = ({ navigation }) => {
         onValueChange={setSelectedCategory}
         style={styles.picker}
       >
-        <picker.Item label="All" value="" />
-        <picker.Item label="Tips" value="Tips" />
-        <picker.Item label="Information" value="Information" />
-        <picker.Item label="Deck" value="Deck" />
-        <picker.Item label="Safety" value="Safety" />
+        <Picker.Item label="All" value="" />
+        <Picker.Item label="Tips" value="Tips" />
+        <Picker.Item label="Information" value="Information" />
+        <Picker.Item label="Deck" value="Deck" />
+        <Picker.Item label="Safety" value="Safety" />
+      </Picker>
+      <Picker
+        selectedValue={sortOption}
+        onValueChange={setSortOption}
+        style={styles.picker}
+      >
+        <Picker.Item label="Name: A to Z" value="name-asc" />
+        <Picker.Item label="Name: Z to A" value="name-desc" />
       </Picker>
       <View
         style={{
@@ -109,7 +140,7 @@ const BlogsScreen = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.container} contentContainerStyle={styles.list}>
-        {filteredBlogs.map((blog) => (
+        {sortedBlogs.map((blog) => (
           <BlogCard
             key={blog.id}
             image={blog.image}
@@ -118,7 +149,6 @@ const BlogsScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("BlogDetails", blog)}
           />
         ))}
-        ;
       </ScrollView>
       <StatusBar style="auto" />
     </View>
@@ -156,6 +186,12 @@ const styles = StyleSheet.create({
     color: "#737373",
     paddingVertical: 10,
     paddingHorizontal: 16,
+  },
+  picker: {
+    marginVertical: 12,
+    backgroundColor: "#fff",
+    borderColor: "#555",
+    borderWidth: 1,
   },
 });
 

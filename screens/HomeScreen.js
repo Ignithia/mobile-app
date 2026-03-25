@@ -21,9 +21,10 @@ const categoryNames = {
 
 const HomeScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [product, setProduct] = useState([]);
+  const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("price-asc");
 
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
@@ -38,28 +39,47 @@ const HomeScreen = ({ navigation }) => {
       },
     )
       .then((res) => res.json())
-      .then((data) =>
-        setProduct(
-          data.items.map((item) => ({
-            id: item.product.id,
-            title: item.product.fieldData.name,
-            description: item.product.fieldData.description,
-            price: (item.skus[0]?.fieldData.price.value || 0) / 100,
-            image: { uri: item.skus[0]?.fieldData["main-image"]?.url },
-            category:
-              categoryNames[item.product.fieldData["category"]?.id] ||
-              "Unknown Category",
-          })),
-        ),
-      )
+      .then((data) => {
+        const fetchedProducts = (data.items || []).map((item) => {
+          const product = item?.product || {};
+          const productFieldData = product?.fieldData || {};
+          const firstCategoryId = Array.isArray(productFieldData.category)
+            ? productFieldData.category[0]
+            : undefined;
+          const imageUrl = item?.skus?.[0]?.fieldData?.["main-image"]?.url;
+
+          return {
+            id: product?.id || item?.id,
+            title: productFieldData.name || "Unknown Product",
+            description: productFieldData.subtitle || "",
+            price: (
+              (item?.skus?.[0]?.fieldData?.price?.value || 0) / 100
+            ).toFixed(2),
+            image: imageUrl ? { uri: imageUrl } : null,
+            category: categoryNames[firstCategoryId] || "Unknown Category",
+          };
+        });
+
+        setProducts(fetchedProducts);
+      })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
-  const filteredProducts = selectedCategory
-    ? product.filter((p) => p.category === selectedCategory)
-    : product.filter((p) =>
-        p.title.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
+  const filteredProducts = products.filter(
+    (p) =>
+      (selectedCategory === "" || p.category === selectedCategory) &&
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOption === "price-asc")
+      return parseFloat(a.price) - parseFloat(b.price);
+    if (sortOption === "price-desc")
+      return parseFloat(b.price) - parseFloat(a.price);
+    if (sortOption === "name-asc") return a.title.localeCompare(b.title);
+    if (sortOption === "name-desc") return b.title.localeCompare(a.title);
+    return 0;
+  });
 
   return (
     <View style={styles.container}>
@@ -75,15 +95,22 @@ const HomeScreen = ({ navigation }) => {
         onValueChange={setSelectedCategory}
         style={styles.picker}
       >
-        <picker.Item label="All" value="" />
-        <picker.Item label="Tips" value="Tips" />
-        <picker.Item label="Information" value="Information" />
-        <picker.Item label="Deck" value="Deck" />
-        <picker.Item label="Safety" value="Safety" />
-        <picker.Item label="Trucks" value="trucks" />
-        <picker.Item label="Accessory" value="Accessory" />
-        <picker.Item label="Wheels" value="Wheels" />
-        <picker.Item label="Skateboards" value="Skateboards" />
+        <Picker.Item label="All" value="" />
+        <Picker.Item label="Trucks" value="trucks" />
+        <Picker.Item label="Accessory" value="Accessory" />
+        <Picker.Item label="Wheels" value="Wheels" />
+        <Picker.Item label="Skateboards" value="Skateboards" />
+      </Picker>
+
+      <Picker
+        selectedValue={sortOption}
+        onValueChange={setSortOption}
+        style={styles.picker}
+      >
+        <Picker.Item label="Price: Low to High" value="price-asc" />
+        <Picker.Item label="Price: High to Low" value="price-desc" />
+        <Picker.Item label="Name: A to Z" value="name-asc" />
+        <Picker.Item label="Name: Z to A" value="name-desc" />
       </Picker>
 
       <View
@@ -107,7 +134,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.container} contentContainerStyle={styles.list}>
-        {filteredProducts.map((product) => (
+        {sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
             image={product.image}
@@ -117,7 +144,6 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("ProductDetails", product)}
           />
         ))}
-        ;
       </ScrollView>
       <StatusBar style="auto" />
     </View>
