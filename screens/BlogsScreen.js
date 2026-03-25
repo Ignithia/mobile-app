@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,17 +10,87 @@ import {
 } from "react-native";
 import BlogCard from "../components/BlogCard.js";
 import { useFocusEffect } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+
+const categoryNames = {
+  "": "All",
+
+  "69aea38f9d4aacd51299a374": "Tips",
+  "69aea3837d4fa11a13523008": "Information",
+  "69aea201f2c69497c7d7e2d5": "Deck",
+  "69ae9fc30963d0d08a436457": "Safety",
+};
 
 const BlogsScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [product, setProduct] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const toggleSwitch = () => setIsEnabled(!isEnabled);
 
   useFocusEffect(React.useCallback(() => {}, [navigation]));
 
+  useEffect(() => {
+    fetch(
+      "https://api.webflow.com/v2/sites/698c7fd48ee7dd8dec207cbb/collections/699efb08624b5726e1c05b0c/items/",
+      {
+        headers: {
+          Authorization:
+            "Bearer 7034f6bc9c4ca213124d6f82746a75a17864aed9abfa63fd7e50e82ec20a56cb",
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then((data) =>
+        setProduct(
+          data.items.map((item) => ({
+            id: item.id,
+            title: item.fieldData.name,
+            description: item.fieldData["post-summary"],
+            body:
+              item.fieldData["post-body"]
+                ?.replace(/<[^>]+>/g, "")
+                .replace(/\u00A0/g, " ") || "",
+            image: { uri: item.fieldData["main-image"]?.url },
+            category:
+              categoryNames[item.fieldData["category"]?.id] ||
+              "Unknown Category",
+          })),
+        ),
+      )
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
+
+  const filteredBlogs = product.filter((blog) => {
+    const matchesCategory = selectedCategory
+      ? blog.category === selectedCategory
+      : true;
+    const matchesSearch = blog.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Blogs</Text>
-      <TextInput placeholder="Search a blog..." style={styles.input} />
+      <TextInput
+        placeholder="Search a blog..."
+        style={styles.input}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+      <Picker
+        selectedValue={selectedCategory}
+        onValueChange={setSelectedCategory}
+        style={styles.picker}
+      >
+        <picker.Item label="All" value="" />
+        <picker.Item label="Tips" value="Tips" />
+        <picker.Item label="Information" value="Information" />
+        <picker.Item label="Deck" value="Deck" />
+        <picker.Item label="Safety" value="Safety" />
+      </Picker>
       <View
         style={{
           flexDirection: "row",
@@ -39,80 +109,16 @@ const BlogsScreen = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.container} contentContainerStyle={styles.list}>
-        <BlogCard
-          image={require("../images/imdages.jpeg")}
-          name="Top 5 Skateboards for Beginners"
-          description="A roundup of the best skateboards for those just starting out."
-          onPress={() =>
-            navigation.navigate("BlogDetails", {
-              image: require("../images/imdages.jpeg"),
-              title: "Top 5 Skateboards for Beginners",
-              shortDesc:
-                "A roundup of the best skateboards for those just starting out.",
-              longDesc:
-                "Choosing your first skateboard can be overwhelming. In this blog, we review the top 5 boards for beginners, covering features, price, and durability. Learn what to look for and how to avoid common mistakes when buying your first skateboard.",
-            })
-          }
-        />
-        <BlogCard
-          image={require("../images/imdages.jpeg")}
-          name="How to Maintain Your Skateboard"
-          description="Tips and tricks for keeping your skateboard in top shape."
-          onPress={() =>
-            navigation.navigate("BlogDetails", {
-              image: require("../images/imdages.jpeg"),
-              title: "How to Maintain Your Skateboard",
-              shortDesc:
-                "Tips and tricks for keeping your skateboard in top shape.",
-              longDesc:
-                "Proper maintenance is key to a smooth ride and long-lasting board. This blog covers cleaning, bearing care, wheel rotation, and deck protection. Discover how regular upkeep can save you money and improve your skating experience.",
-            })
-          }
-        />
-        <BlogCard
-          image={require("../images/imdages.jpeg")}
-          name="Skateboarding Safety: Essential Gear"
-          description="A guide to helmets, pads, and shoes for safe skating."
-          onPress={() =>
-            navigation.navigate("BlogDetails", {
-              image: require("../images/imdages.jpeg"),
-              title: "Skateboarding Safety: Essential Gear",
-              shortDesc:
-                "A guide to helmets, pads, and shoes for safe skating.",
-              longDesc:
-                "Safety should always come first. We break down the must-have gear for skateboarders, including helmet types, knee and elbow pads, and the best shoes for grip and protection. Stay safe and skate smart with these expert recommendations.",
-            })
-          }
-        />
-        <BlogCard
-          image={require("../images/imdages.jpeg")}
-          name="The History of Skateboarding"
-          description="Explore the origins and evolution of skateboarding culture."
-          onPress={() =>
-            navigation.navigate("BlogDetails", {
-              image: require("../images/imdages.jpeg"),
-              title: "The History of Skateboarding",
-              shortDesc:
-                "Explore the origins and evolution of skateboarding culture.",
-              longDesc:
-                "From its humble beginnings in the 1950s to the global phenomenon it is today, skateboarding has a rich history. This blog traces the sport’s evolution, key figures, and how skateboarding became a cultural icon.",
-            })
-          }
-        />
-        <BlogCard
-          image={require("../images/imdages.jpeg")}
-          name="Skateboarding Tricks: Step-by-Step Guide"
-          description="Learn how to master basic and advanced tricks."
-          onPress={() =>
-            navigation.navigate("BlogDetails", {
-              image: require("../images/imdages.jpeg"),
-              title: "Skateboarding Tricks: Step-by-Step Guide",
-              shortDesc: "Learn how to master basic and advanced tricks.",
-              longDesc:
-                "Ready to take your skills to the next level? This blog offers step-by-step instructions for popular tricks like ollies, kickflips, and grinds. Perfect for skaters looking to progress and impress at the skatepark.",
-            })
-          }
-        />
+        {filteredBlogs.map((blog) => (
+          <BlogCard
+            key={blog.id}
+            image={blog.image}
+            name={blog.title}
+            description={blog.description}
+            onPress={() => navigation.navigate("BlogDetails", blog)}
+          />
+        ))}
+        ;
       </ScrollView>
       <StatusBar style="auto" />
     </View>

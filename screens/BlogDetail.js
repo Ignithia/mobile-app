@@ -3,24 +3,24 @@ import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
-  View,
+  ScrollView,
   TextInput,
   Image,
   TouchableOpacity,
 } from "react-native";
 
 const BlogDetail = ({ route, navigation }) => {
-  const { image, title, shortDesc, longDesc } = route.params;
+  const { image, title, body } = route.params;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.heading}>Details</Text>
       <Image source={image} style={styles.image} />
       <Text style={styles.blogTitle}>{title}</Text>
-      <Text style={styles.blogContent}>{longDesc}</Text>
+      <Text style={styles.blogContent}>{body}</Text>
 
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -62,11 +62,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   blogContent: {
-    fontSize: 16,
-    color: "#d0d0d0",
-    marginTop: 12,
-    fontWeight: "700",
-    textAlign: "center",
+    fontSize: 17,
+    color: "#e0e0e0",
+    marginTop: 18,
+    marginHorizontal: 20,
+    marginBottom: 32,
+    fontWeight: "400",
+    textAlign: "left",
+    lineHeight: 26,
+    backgroundColor: "#181818",
+    borderRadius: 10,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
   },
   input: {
     marginTop: 16,

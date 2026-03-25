@@ -8,7 +8,6 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import ProductCard from "../components/ProductCard";
 
 const ProductDetail = ({ route, navigation }) => {
   const { image, title, description, price } = route.params;

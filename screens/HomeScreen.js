@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,16 +9,83 @@ import {
   TextInput,
 } from "react-native";
 import ProductCard from "../components/ProductCard";
-import { useFocusEffect } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+
+const categoryNames = {
+  "": "All",
+  "69aea18ae26b18b385b22cbc": "trucks",
+  "69aea0d224f377f293dd0695": "Accessory",
+  "69aea04edd387b0773e3626f": "Wheels",
+  "699efde5b33f0d8de5677b36": "Skateboards",
+};
 
 const HomeScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [product, setProduct] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
   const toggleSwitch = () => setIsEnabled(!isEnabled);
+
+  useEffect(() => {
+    fetch(
+      "https://api.webflow.com/v2/sites/698c7fd48ee7dd8dec207cbb/products",
+      {
+        headers: {
+          Authorization:
+            "Bearer 7034f6bc9c4ca213124d6f82746a75a17864aed9abfa63fd7e50e82ec20a56cb",
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then((data) =>
+        setProduct(
+          data.items.map((item) => ({
+            id: item.product.id,
+            title: item.product.fieldData.name,
+            description: item.product.fieldData.description,
+            price: (item.skus[0]?.fieldData.price.value || 0) / 100,
+            image: { uri: item.skus[0]?.fieldData["main-image"]?.url },
+            category:
+              categoryNames[item.product.fieldData["category"]?.id] ||
+              "Unknown Category",
+          })),
+        ),
+      )
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
+
+  const filteredProducts = selectedCategory
+    ? product.filter((p) => p.category === selectedCategory)
+    : product.filter((p) =>
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Our offer</Text>
-      <TextInput placeholder="Search a product..." style={styles.input} />
+      <TextInput
+        placeholder="Search a product..."
+        style={styles.input}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+      <Picker
+        selectedValue={selectedCategory}
+        onValueChange={setSelectedCategory}
+        style={styles.picker}
+      >
+        <picker.Item label="All" value="" />
+        <picker.Item label="Tips" value="Tips" />
+        <picker.Item label="Information" value="Information" />
+        <picker.Item label="Deck" value="Deck" />
+        <picker.Item label="Safety" value="Safety" />
+        <picker.Item label="Trucks" value="trucks" />
+        <picker.Item label="Accessory" value="Accessory" />
+        <picker.Item label="Wheels" value="Wheels" />
+        <picker.Item label="Skateboards" value="Skateboards" />
+      </Picker>
+
       <View
         style={{
           flexDirection: "row",
@@ -40,76 +107,17 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
       <ScrollView style={styles.container} contentContainerStyle={styles.list}>
-        <ProductCard
-          image={require("../images/imdages.jpeg")}
-          name="Batman Skateboard"
-          description="Skateboard met batman logo"
-          price={29.99}
-          onPress={() =>
-            navigation.navigate("ProductDetails", {
-              image: require("../images/imdages.jpeg"),
-              title: "Batman Skateboard",
-              description: "Skateboard met batman logo",
-              price: "29.99",
-            })
-          }
-        />
-        <ProductCard
-          image={require("../images/imdages.jpeg")}
-          name="Superman Skateboard"
-          description="Skateboard met superman logo"
-          price={34.99}
-          onPress={() =>
-            navigation.navigate("ProductDetails", {
-              image: require("../images/imdages.jpeg"),
-              name: "Superman Skateboard",
-              description: "Skateboard met superman logo",
-              price: "34.99",
-            })
-          }
-        />
-        <ProductCard
-          image={require("../images/imdages.jpeg")}
-          name="Wonder Woman Skateboard"
-          description="Skateboard met wonder woman logo"
-          price={39.99}
-          onPress={() =>
-            navigation.navigate("ProductDetails", {
-              image: require("../images/imdages.jpeg"),
-              name: "Wonder Woman Skateboard",
-              description: "Skateboard met wonder woman logo",
-              price: "39.99",
-            })
-          }
-        />
-        <ProductCard
-          image={require("../images/imdages.jpeg")}
-          name="Flash Skateboard"
-          description="Skateboard met flash logo"
-          price={27.99}
-          onPress={() =>
-            navigation.navigate("ProductDetails", {
-              image: require("../images/imdages.jpeg"),
-              name: "Flash Skateboard",
-              description: "Skateboard met flash logo",
-              price: "27.99",
-            })
-          }
-        />
-        <ProductCard
-          image={require("../images/imdages.jpeg")}
-          name="Green Lantern Skateboard"
-          description="Skateboard met green lantern logo"
-          price={31.99}
-          onPress={() =>
-            navigation.navigate("ProductDetails", {
-              image: require("../images/imdages.jpeg"),
-              name: "Green Lantern Skateboard",
-              description: "Skateboard met green lantern logo",
-              price: "31.99",
-            })
-          }
-        />
+        {filteredProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            image={product.image}
+            name={product.title}
+            description={product.description}
+            price={product.price}
+            onPress={() => navigation.navigate("ProductDetails", product)}
+          />
+        ))}
+        ;
       </ScrollView>
       <StatusBar style="auto" />
     </View>
@@ -147,6 +155,12 @@ const styles = StyleSheet.create({
     color: "#737373",
     paddingVertical: 10,
     paddingHorizontal: 16,
+  },
+  picker: {
+    marginVertical: 12,
+    backgroundColor: "#fff",
+    borderColor: "#555",
+    borderWidth: 1,
   },
 });
 
