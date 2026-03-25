@@ -9,6 +9,7 @@ import {
   TextInput,
 } from "react-native";
 import ProductCard from "../components/ProductCard";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -45,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
           description="Skateboard met batman logo"
           price={29.99}
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("ProductDetails", {
               image: require("../images/imdages.jpeg"),
               title: "Batman Skateboard",
               description: "Skateboard met batman logo",
@@ -59,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
           description="Skateboard met superman logo"
           price={34.99}
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("ProductDetails", {
               image: require("../images/imdages.jpeg"),
               name: "Superman Skateboard",
               description: "Skateboard met superman logo",
@@ -73,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
           description="Skateboard met wonder woman logo"
           price={39.99}
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("ProductDetails", {
               image: require("../images/imdages.jpeg"),
               name: "Wonder Woman Skateboard",
               description: "Skateboard met wonder woman logo",
@@ -87,7 +88,7 @@ const HomeScreen = ({ navigation }) => {
           description="Skateboard met flash logo"
           price={27.99}
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("ProductDetails", {
               image: require("../images/imdages.jpeg"),
               name: "Flash Skateboard",
               description: "Skateboard met flash logo",
@@ -101,7 +102,7 @@ const HomeScreen = ({ navigation }) => {
           description="Skateboard met green lantern logo"
           price={31.99}
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("ProductDetails", {
               image: require("../images/imdages.jpeg"),
               name: "Green Lantern Skateboard",
               description: "Skateboard met green lantern logo",

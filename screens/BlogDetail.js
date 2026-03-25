@@ -8,17 +8,16 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import ProductCard from "../components/ProductCard";
 
-const ProductDetail = ({ route }) => {
+const BlogDetail = ({ route, navigation }) => {
   const { image, title, shortDesc, longDesc } = route.params;
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Details</Text>
       <Image source={image} style={styles.image} />
-      <Text style={styles.productTitle}>{title}</Text>
-      <Text style={styles.productDescription}>{longDesc}</Text>
+      <Text style={styles.blogTitle}>{title}</Text>
+      <Text style={styles.blogContent}>{longDesc}</Text>
 
       <StatusBar style="auto" />
     </View>
@@ -49,22 +48,22 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
   },
-  productTitle: {
+  blogTitle: {
     fontSize: 22,
     fontWeight: "bold",
     color: "#fff",
     marginTop: 16,
     textAlign: "center",
   },
-  productDescription: {
+  blogDescription: {
     fontSize: 16,
     color: "#d0d0d0",
     marginTop: 8,
     textAlign: "center",
   },
-  productPrice: {
-    fontSize: 20,
-    color: "#fff",
+  blogContent: {
+    fontSize: 16,
+    color: "#d0d0d0",
     marginTop: 12,
     fontWeight: "700",
     textAlign: "center",
@@ -116,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductDetail;
+export default BlogDetail;

@@ -9,10 +9,13 @@ import {
   TextInput,
 } from "react-native";
 import BlogCard from "../components/BlogCard.js";
+import { useFocusEffect } from "@react-navigation/native";
 
 const BlogsScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
+
+  useFocusEffect(React.useCallback(() => {}, [navigation]));
 
   return (
     <View style={styles.container}>
@@ -41,7 +44,7 @@ const BlogsScreen = ({ navigation }) => {
           name="Top 5 Skateboards for Beginners"
           description="A roundup of the best skateboards for those just starting out."
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("BlogDetails", {
               image: require("../images/imdages.jpeg"),
               title: "Top 5 Skateboards for Beginners",
               shortDesc:
@@ -56,7 +59,7 @@ const BlogsScreen = ({ navigation }) => {
           name="How to Maintain Your Skateboard"
           description="Tips and tricks for keeping your skateboard in top shape."
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("BlogDetails", {
               image: require("../images/imdages.jpeg"),
               title: "How to Maintain Your Skateboard",
               shortDesc:
@@ -71,7 +74,7 @@ const BlogsScreen = ({ navigation }) => {
           name="Skateboarding Safety: Essential Gear"
           description="A guide to helmets, pads, and shoes for safe skating."
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("BlogDetails", {
               image: require("../images/imdages.jpeg"),
               title: "Skateboarding Safety: Essential Gear",
               shortDesc:
@@ -86,7 +89,7 @@ const BlogsScreen = ({ navigation }) => {
           name="The History of Skateboarding"
           description="Explore the origins and evolution of skateboarding culture."
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("BlogDetails", {
               image: require("../images/imdages.jpeg"),
               title: "The History of Skateboarding",
               shortDesc:
@@ -101,7 +104,7 @@ const BlogsScreen = ({ navigation }) => {
           name="Skateboarding Tricks: Step-by-Step Guide"
           description="Learn how to master basic and advanced tricks."
           onPress={() =>
-            navigation.navigate("Details", {
+            navigation.navigate("BlogDetails", {
               image: require("../images/imdages.jpeg"),
               title: "Skateboarding Tricks: Step-by-Step Guide",
               shortDesc: "Learn how to master basic and advanced tricks.",
