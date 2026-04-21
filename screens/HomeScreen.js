@@ -89,6 +89,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.input}
         value={searchQuery}
         onChangeText={setSearchQuery}
+        placeholderTextColor="#a0a0a0"
       />
       <Picker
         selectedValue={selectedCategory}
@@ -113,14 +114,7 @@ const HomeScreen = ({ navigation }) => {
         <Picker.Item label="Name: Z to A" value="name-desc" />
       </Picker>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          marginVertical: 12,
-          justifyContent: "space-between",
-        }}
-      >
+      <View style={styles.promotionsContainer}>
         <Text style={{ color: "#fff", marginLeft: 8 }}>
           Only show promotions
         </Text>
@@ -154,6 +148,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#121212",
+  },
+  promotionsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 12,
+    marginHorizontal: 16,
+    justifyContent: "space-between",
   },
   heading: {
     color: "#ffffff",

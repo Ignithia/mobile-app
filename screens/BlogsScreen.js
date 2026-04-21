@@ -102,6 +102,7 @@ const BlogsScreen = ({ navigation }) => {
         style={styles.input}
         value={searchQuery}
         onChangeText={setSearchQuery}
+        placeholderTextColor="#a0a0a0"
       />
       <Picker
         selectedValue={selectedCategory}
@@ -122,23 +123,6 @@ const BlogsScreen = ({ navigation }) => {
         <Picker.Item label="Name: A to Z" value="name-asc" />
         <Picker.Item label="Name: Z to A" value="name-desc" />
       </Picker>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          marginVertical: 12,
-          justifyContent: "space-between",
-        }}
-      >
-        <Switch
-          style={styles.switch}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isEnabled ? "#81b0ff" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
-      </View>
       <ScrollView style={styles.container} contentContainerStyle={styles.list}>
         {sortedBlogs.map((blog) => (
           <BlogCard
