@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
-  View,
+  ScrollView,
   TextInput,
   Image,
   TouchableOpacity,
@@ -22,7 +22,7 @@ const ProductDetail = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.heading}>Details</Text>
       <Image source={image} style={styles.image} />
       <Text style={styles.productTitle}>{title}</Text>
@@ -30,7 +30,7 @@ const ProductDetail = ({ route, navigation }) => {
       <Text style={styles.productPrice}>
         ${typeof price === "number" ? price.toFixed(2) : price}
       </Text>
-      <View style={styles.quantityContainer}>
+      <ScrollView style={styles.quantityContainer}>
         <TouchableOpacity
           style={styles.quantityButton}
           onPress={decreaseQuantity}
@@ -44,7 +44,7 @@ const ProductDetail = ({ route, navigation }) => {
         >
           <Text style={styles.quantityButtonText}>+</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
@@ -59,7 +59,7 @@ const ProductDetail = ({ route, navigation }) => {
         </Text>
       </TouchableOpacity>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 };
 
