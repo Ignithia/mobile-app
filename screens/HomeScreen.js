@@ -101,6 +101,7 @@ const HomeScreen = ({ navigation }) => {
         <Picker.Item label="Accessory" value="Accessory" />
         <Picker.Item label="Wheels" value="Wheels" />
         <Picker.Item label="Skateboards" value="Skateboards" />
+        <Picker.Item label="Decks" value="Deck" />
       </Picker>
 
       <Picker
