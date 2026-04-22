@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
+  View,
   TextInput,
   Image,
   TouchableOpacity,
@@ -30,7 +31,7 @@ const ProductDetail = ({ route, navigation }) => {
       <Text style={styles.productPrice}>
         ${typeof price === "number" ? price.toFixed(2) : price}
       </Text>
-      <ScrollView style={styles.quantityContainer}>
+      <View style={styles.quantityContainer}>
         <TouchableOpacity
           style={styles.quantityButton}
           onPress={decreaseQuantity}
@@ -44,7 +45,7 @@ const ProductDetail = ({ route, navigation }) => {
         >
           <Text style={styles.quantityButtonText}>+</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
       <TouchableOpacity
         style={styles.button}
         onPress={() =>
